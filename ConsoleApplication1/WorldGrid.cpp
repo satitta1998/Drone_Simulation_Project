@@ -18,6 +18,7 @@ struct ChUnknown : public Tile
 EmptyTile EMPTY{};
 WallTile WALL{};
 ExitTile EXIT{};
+PlayerTile PLAYER{};
 
 WorldGrid::WorldGrid() 
 	: m_grid{}

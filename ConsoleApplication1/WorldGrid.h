@@ -9,6 +9,7 @@
 #include "EmptyTile.h"
 #include "WallTile.h"
 #include "ExitTile.h"
+#include "PlayerTile.h"
 
 namespace jb
 {
@@ -18,6 +19,7 @@ class Tile;
 extern EmptyTile EMPTY;
 extern WallTile WALL;
 extern ExitTile EXIT;
+extern PlayerTile PLAYER;
 
 class WorldGrid {
 

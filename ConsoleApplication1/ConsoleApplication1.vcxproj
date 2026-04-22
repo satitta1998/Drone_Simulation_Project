@@ -171,11 +171,13 @@
     <ClInclude Include="ExitTile.h" />
     <ClInclude Include="NetworkHandler.h" />
     <ClInclude Include="OutputContext.h" />
+    <ClInclude Include="PlayerTile.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="Sensor.h" />
     <ClInclude Include="SensorRegistry.h" />
     <ClInclude Include="StripSensor.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="UnknownTile.h" />
     <ClInclude Include="WallTile.h" />
     <ClInclude Include="WorldGrid.h" />
   </ItemGroup>

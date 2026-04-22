@@ -140,9 +140,6 @@
     <ClInclude Include="WallTile.h">
       <Filter>Header Files\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="CharactersMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MapView.h">
       <Filter>Header Files\Sensor</Filter>
     </ClInclude>
@@ -181,6 +178,15 @@
     </ClInclude>
     <ClInclude Include="SensorRegistry.h">
       <Filter>Header Files\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="CharactersMap.h">
+      <Filter>Header Files\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerTile.h">
+      <Filter>Header Files\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="UnknownTile.h">
+      <Filter>Header Files\Tile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
