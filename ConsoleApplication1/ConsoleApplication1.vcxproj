@@ -173,6 +173,7 @@
     <ClInclude Include="OutputContext.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="Sensor.h" />
+    <ClInclude Include="SensorRegistry.h" />
     <ClInclude Include="StripSensor.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="WallTile.h" />

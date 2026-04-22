@@ -8,6 +8,7 @@
 #include "CmdMap.h"
 #include "EnergyConsumptionDecorator.h"
 #include "EnergyConsumptionValue.h"
+#include "SensorRegistry.h"
 
 #include <map>
 #include <typeindex>
@@ -15,14 +16,6 @@
 
 namespace jb
 {
-using ExistingSensors = std::map < std::type_index, std::string > ;
-const ExistingSensors existingSensors
-{
-    {typeid(AreaSensor), "s_a"},
-    {typeid(StripSensor), "s_b"},
-    {typeid(ConeSensor), "s_c"}
-};
-
 std::unique_ptr<Drone> DroneFactory::createCustomDrone(const WorldGrid& theWorld, Position position, Compass compass, std::vector<Sensor*> sensors, unsigned int energy, const jb::OutputContext& context, bool& working)
 {
 	using CommandsMap = std::map<std::string, std::unique_ptr<Command>>;
@@ -61,7 +54,7 @@ std::unique_ptr<Drone> DroneFactory::createCustomDrone(const WorldGrid& theWorld
     Drone* rawDronePtr = drone.get();
     for (Sensor* s : sensors)
     {
-        std::string key = existingSensors.at(typeid(*s));
+        std::string key = sensorRegistry.at(typeid(*s)).key;
         std::unique_ptr<CmdExecute> selectSensor = std::make_unique<CmdExecute>([rawDronePtr, s](const jb::OutputContext& ctx) { rawDronePtr->setActiveSensor(s); ctx.output("Sensor active\n"); });
         commands.emplace(key, std::move(selectSensor));
     }

@@ -179,6 +179,9 @@
     <ClInclude Include="DroneFactory.h">
       <Filter>Header Files\Drone</Filter>
     </ClInclude>
+    <ClInclude Include="SensorRegistry.h">
+      <Filter>Header Files\Sensor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="world_grid.txt" />
