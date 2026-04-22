@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Cmd">
+      <UniqueIdentifier>{4cbe134a-c638-4b10-b815-9cba23362937}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Cmd">
+      <UniqueIdentifier>{acd9af2a-cfb7-4f33-8da9-34b929ef6a05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Tile">
+      <UniqueIdentifier>{4c4d7d43-0a01-449f-a855-95b3a1eed481}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Sensor">
+      <UniqueIdentifier>{e49fbb42-6487-41ba-a9d4-5779ca69b45c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sensor">
+      <UniqueIdentifier>{fec37a0f-e482-476f-8de7-49999033c82f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\EnergyConsumption">
+      <UniqueIdentifier>{0c54ed36-4980-4b83-8cb1-4a67f387770f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Drone">
+      <UniqueIdentifier>{83e73b90-583f-4437-958e-a9ff8c8a23d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Drone">
+      <UniqueIdentifier>{23545e98-56d9-4528-9435-87f764874cf5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Compass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldGrid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cmd\Forward.cpp">
+      <Filter>Source Files\Cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="Position.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd\TurnLeft.cpp">
+      <Filter>Source Files\Cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd\TurnRight.cpp">
+      <Filter>Source Files\Cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="cmd\Execute.cpp">
+      <Filter>Source Files\Cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdPrintPov.cpp">
+      <Filter>Source Files\Cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldGritIteratorTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdMap.h">
+      <Filter>Header Files\Cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdMap.cpp">
+      <Filter>Source Files\Cmd</Filter>
+    </ClCompile>
+    <ClCompile Include="MapView.cpp">
+      <Filter>Source Files\Sensor</Filter>
+    </ClCompile>
+    <ClCompile Include="AreaSensor.cpp">
+      <Filter>Source Files\Sensor</Filter>
+    </ClCompile>
+    <ClCompile Include="StripSensor.cpp">
+      <Filter>Source Files\Sensor</Filter>
+    </ClCompile>
+    <ClCompile Include="ConeSensor.cpp">
+      <Filter>Source Files\Sensor</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Drone.cpp">
+      <Filter>Source Files\Drone</Filter>
+    </ClCompile>
+    <ClCompile Include="DroneFactory.cpp">
+      <Filter>Source Files\Drone</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Position.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cmd\Command.h">
+      <Filter>Header Files\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="Cmd\Forward.h">
+      <Filter>Header Files\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd\TurnLeft.h">
+      <Filter>Header Files\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd\TurnRight.h">
+      <Filter>Header Files\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="cmd\Execute.h">
+      <Filter>Header Files\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdPrintPov.h">
+      <Filter>Header Files\Cmd</Filter>
+    </ClInclude>
+    <ClInclude Include="EmptyTile.h">
+      <Filter>Header Files\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitTile.h">
+      <Filter>Header Files\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseEssentials.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WallTile.h">
+      <Filter>Header Files\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="CharactersMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MapView.h">
+      <Filter>Header Files\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="StripSensor.h">
+      <Filter>Header Files\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="ConeSensor.h">
+      <Filter>Header Files\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="AreaSensor.h">
+      <Filter>Header Files\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="Sensor.h">
+      <Filter>Header Files\Sensor</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnergyConsumptionDecorator.h">
+      <Filter>Header Files\EnergyConsumption</Filter>
+    </ClInclude>
+    <ClInclude Include="EnergyConsumptionValue.h">
+      <Filter>Header Files\EnergyConsumption</Filter>
+    </ClInclude>
+    <ClInclude Include="Drone.h">
+      <Filter>Header Files\Drone</Filter>
+    </ClInclude>
+    <ClInclude Include="Compass.h">
+      <Filter>Header Files\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="DroneFactory.h">
+      <Filter>Header Files\Drone</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="world_grid.txt" />
+  </ItemGroup>
+</Project>
