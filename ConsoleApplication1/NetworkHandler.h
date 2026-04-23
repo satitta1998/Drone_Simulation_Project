@@ -75,6 +75,15 @@ namespace whytsoft
 
 		void GetInput(size_t* _socketid, std::string* _input);
 		void PutOutput(size_t _socketid, const std::string& _output);
+		void FreeSocketInformation(DWORD Index);
+
+		void disconnect(size_t socketId)
+		{
+			if (socketId < FD_SETSIZE && m_socketArray[socketId] != nullptr)
+			{
+				FreeSocketInformation(static_cast<DWORD>(socketId));
+			}
+		}
 
 	private:
 		virtual void onNewConnection(size_t socketId) const = 0;
@@ -96,7 +105,6 @@ namespace whytsoft
 
 		void Init();
 		size_t CreateSocketInformation(SOCKET s, size_t _listenerIdx);
-		void FreeSocketInformation(DWORD Index);
 
 		unsigned short m_usersPort;
 		unsigned short m_remoteServerPort;

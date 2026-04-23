@@ -53,9 +53,9 @@ int main()
     try
     {
         whytsoft::NaiveNetworkHandler nh{ 9000 };
-        bool running = true;
+        bool serverRunning = true;
 
-        std::thread reader(readerThread, std::ref(nh), std::ref(running));
+        std::thread reader(readerThread, std::ref(nh), std::ref(serverRunning));
         
         std::ifstream inputFile("world_grid.txt");
         if (!inputFile)
@@ -96,10 +96,10 @@ int main()
 
         std::cout << "Server started. World loaded." << std::endl;
 
-        while (running)
+        while (serverRunning)
         {
             std::unique_lock<std::mutex> lockOnQueue(g_mutex);
-            g_cv.wait(lockOnQueue, [] {return !g_queue.empty(); });
+            g_cv.wait(lockOnQueue, [&] {return !g_queue.empty() || !serverRunning; });
 
             InputEvent ev = std::move(g_queue.front());
             g_queue.pop();
@@ -110,6 +110,14 @@ int main()
 
             OutputContext context(nh, socketId);
 
+            if (input == "exit")
+            {
+                clients.erase(socketId);
+                std::cout << "Client " << socketId << " disconnected\n";
+                nh.disconnect(socketId);
+                continue;
+            }
+
             auto itr = clients.find(socketId);
             bool isNewClient = itr == clients.end();
             if (isNewClient)
@@ -118,7 +126,7 @@ int main()
                 {
                     const DroneConfig& cfg = drones.at(input);
                     ClientState state;
-                    state.drone = DroneFactory::createCustomDrone(theWorld, cfg.position, cfg.direction, cfg.sensors, cfg.energy, context, running);
+                    state.drone = DroneFactory::createCustomDrone(theWorld, cfg.position, cfg.direction, cfg.sensors, cfg.energy, context, state.active);
                     clients[socketId] = std::move(state);
                     context.output("Drone " + input + " assigned to you (ID: " + std::to_string(socketId) + "). Ready.\n");
                 }
@@ -136,10 +144,10 @@ int main()
                 continue;
             }
             std::cout << "[Client " << socketId << "]: " << input << std::endl;
-            drone->processCommand(input, context, theWorld, running);
+            drone->processCommand(input, context, theWorld, client.active);
             input.clear();
         }
-        running = false;
+        serverRunning = false;
         g_cv.notify_all();
         if (reader.joinable())
         {
