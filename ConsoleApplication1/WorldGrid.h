@@ -13,7 +13,8 @@
 
 namespace jb
 {
-
+//class WorldGrid;
+//extern WorldGrid* GLOBAL_GRID;
 class Tile;
 
 extern EmptyTile EMPTY;
@@ -30,6 +31,8 @@ public:
 	WorldGrid(std::ifstream& inputFile);
 
 	Tile &getTile(int x, int y) const;
+
+	void setTile(int x, int y, Tile& newTile);
 
 	int getNumRows() const { return static_cast<int>(m_grid.size()); }
 

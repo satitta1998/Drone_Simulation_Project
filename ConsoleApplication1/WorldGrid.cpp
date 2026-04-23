@@ -7,6 +7,7 @@
 
 namespace jb
 {
+WorldGrid* GLOBAL_GRID = nullptr;
 using CharMap = std::map<char, Tile*>;
 Tile& parseCharacters(const CharactersMap& characters, const char& ch);
 
@@ -70,6 +71,11 @@ Tile &WorldGrid::getTile(int x, int y) const
 
 	Tile *tile = m_grid[y][x];
 	return tile ? *tile : EMPTY;
+}
+
+void WorldGrid::setTile(int x, int y, Tile& newTile)
+{
+	m_grid[y][x] = &newTile;
 }
 
 Tile& parseCharacters(const CharactersMap& characters, const char& ch)
