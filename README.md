@@ -1,4 +1,4 @@
-#### Drone Control & Specifications
+## Drone Control & Specifications
 
 The system supports three types of drones, each featuring a unique sensor suite and energy capacity.
 
@@ -27,19 +27,21 @@ Sensors allow the drone to detect obstacles and terrain features in the simulati
 
 ### 3. Available Drone Models
 When connecting to the server, you must choose one of the following models by typing its name:
-Leleka
+
+
+#### Leleka
 
 Energy Capacity: 300 units.
 Hardware: Equipped with one Cone Sensor (s_c).
 Role: An economical scout designed for precise, energy-efficient reconnaissance.
 
-Shark
+#### Shark
 
 Energy Capacity: 500 units.
 Hardware: Heavy-duty configuration. Carries a dual-sensor suite: Area Sensor (s_a) and Strip Sensor (s_b).
 Role: High-awareness explorer. Best for mapping large areas quickly, though scanning consumes more power.
 
-Octopus
+#### Octopus
 
 Energy Capacity: 400 units.
 Hardware: Equipped with one Cone Sensor (s_c).
@@ -59,7 +61,7 @@ When viewing the world or receiving scan data, the following symbols are used:
 |      E      | Exit Point       | The target destination or extraction zone.                              |
 |      @      | Drone            | Represents your current position or the position of other active drones.|
 
-### Getting Started
+### 5. Getting Started
 1. Launch the Server: Ensure the C++ server is running and the world_grid.txt is present.
 2. Connect the Client: Run the Python client script.
 3. Choose a Model: Type the name (e.g., Shark) when prompted.
