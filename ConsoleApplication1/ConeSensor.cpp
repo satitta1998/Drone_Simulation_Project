@@ -1,6 +1,8 @@
 #include "ConeSensor.h"
 #include "MapView.h"
 #include "CharactersMap.h"
+#include "UnknownTile.h"
+#include "PlayerTile.h"
 #include <iostream>
 #include <string>
 
@@ -16,7 +18,7 @@ namespace jb
 		int spaceNum = maxDepth - currentDepth;
 		for (int i = 0; i < spaceNum; ++i)
 		{
-			context.output(characters.at(&UNKNOWN));
+			context.output(characters.at(&UnknownTile::getInstance()));
 		}
 
 		Position start = currentPos;
@@ -33,15 +35,15 @@ namespace jb
 		printRowRecursive(view, advance(currentPos, comp), comp, currentDepth + 1, maxDepth, context);
 	}
 
-	void ConeSensor::scan(const WorldGrid& grid, const Position& position, const Compass& compass, const jb::OutputContext& context) const
+	void ConeSensor::scan(const IWorldView& grid, const Position& position, const Compass& compass, const jb::OutputContext& context) const
 	{
 		MapView mapView{ grid, const_cast<Position&>(position), compass };
 
 		for (int i = 0; i < MaxDepth-1; ++i)
 		{
-			context.output(characters.at(&UNKNOWN));
+			context.output(characters.at(&UnknownTile::getInstance()));
 		}
-		context.output(characters.at(&PLAYER) + "\n");
+		context.output(characters.at(&PlayerTile::getInstance()) + "\n");
 		
 		int currentDepth = 1;
 		printRowRecursive(mapView, advance(position, compass), compass, currentDepth, MaxDepth, context);

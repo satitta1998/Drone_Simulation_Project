@@ -9,8 +9,15 @@ namespace jb
 
 struct ExitTile : public Tile 
 {
+public:
 	ExitTile() : Tile(EXIT) { }
 	virtual bool canOccupy(const jb::OutputContext& context) const { return true; }
+
+	static ExitTile& getInstance()
+	{
+		static ExitTile instance;
+		return instance;
+	}
 };
 
 } // jb

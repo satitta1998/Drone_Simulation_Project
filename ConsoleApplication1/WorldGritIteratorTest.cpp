@@ -1,4 +1,7 @@
 #include "WorldGrid.h"
+#include "EmptyTile.h"
+#include "ExitTile.h"
+#include "WallTile.h"
 #include <assert.h>
 
 //.#..#
@@ -10,29 +13,29 @@
 void checkBeginZeroIdxGridCell(const jb::WorldGrid & w)
 {
     jb::WorldGrid::const_iterator itr = w.begin(jb::Position{ 0,0 });
-    assert(*itr == &jb::EMPTY);
+    assert(*itr == &jb::EmptyTile::getInstance());
 }
 
 void checkBeginForMiddleCell(const jb::WorldGrid& w)
 {
     {
         jb::WorldGrid::const_iterator itr = w.begin(jb::Position{ 1,1 });
-        assert(*itr == &jb::EMPTY);
+        assert(*itr == &jb::EmptyTile::getInstance());
     }
     {
         jb::WorldGrid::const_iterator itr = w.begin(jb::Position{ 0,3});
-        assert(*itr == &jb::EXIT);
+        assert(*itr == &jb::ExitTile::getInstance());
     }
     {
         jb::WorldGrid::const_iterator itr = w.begin(jb::Position{ 3,2 });
-        assert(*itr == &jb::WALL);
+        assert(*itr == &jb::WallTile::getInstance());
     }
 }
 
 void checkOutOfBounds(const jb::WorldGrid & w)
 {
     jb::WorldGrid::const_iterator itr = w.begin(jb::Position{ -1,1 });
-    assert(*itr == &jb::WALL);
+    assert(*itr == &jb::WallTile::getInstance());
 }
 
 void checkEndLine(const jb::WorldGrid& w)

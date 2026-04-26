@@ -6,7 +6,7 @@ namespace jb
 {
 	static constexpr int MaxRows = 4;
 
-	void AreaSensor::scan(const WorldGrid& grid, const Position& position, const Compass& compass, const jb::OutputContext& context) const
+	void AreaSensor::scan(const IWorldView& grid, const Position& position, const Compass& compass, const jb::OutputContext& context) const
 	{
 		MapView mapView{ grid, const_cast<Position&>(position), compass };
 		Position start = left(back(position, compass), compass);

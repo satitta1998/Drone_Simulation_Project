@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AreaSensor.cpp" />
+    <ClCompile Include="ClientManager.cpp" />
     <ClCompile Include="ConeSensor.cpp" />
     <ClCompile Include="DroneFactory.cpp" />
     <ClCompile Include="MapView.cpp" />
@@ -152,9 +153,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AreaSensor.h" />
+    <ClInclude Include="ClientManager.h" />
     <ClInclude Include="DroneFactory.h" />
+    <ClInclude Include="DynamicWorldView.h" />
     <ClInclude Include="EnergyConsumptionDecorator.h" />
     <ClInclude Include="EnergyConsumptionValue.h" />
+    <ClInclude Include="IWorldView.h" />
     <ClInclude Include="MapView.h" />
     <ClInclude Include="BaseEssentials.h" />
     <ClInclude Include="CharactersMap.h" />

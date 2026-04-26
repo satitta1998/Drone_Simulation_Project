@@ -17,11 +17,6 @@ public:
 
 	virtual bool canOccupy(const jb::OutputContext& context) const = 0;
 
-	//const bool isExitBehavior()
-	//{
-	//	return (m_exitBehavior == EXIT ? true : false);
-	//}
-
 private:
 	const ExitBehavior m_exitBehavior;
 };

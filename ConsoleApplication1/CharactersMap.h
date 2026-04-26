@@ -6,19 +6,22 @@
 #include "Tile.h"
 #include "OutputContext.h"
 #include "UnknownTile.h"
+#include "EmptyTile.h"
+#include "WallTile.h"
+#include "ExitTile.h"
+#include "PlayerTile.h"
 
 namespace jb
 {
-inline UnknownTile UNKNOWN;
 
 using CharactersMap = std::map<Tile*, std::string>;
 inline const CharactersMap characters
 {
-	{&WALL, "#"},
-	{&EMPTY, "."},
-	{&EXIT, "E"},
-	{&PLAYER, "@"},
-	{&UNKNOWN, " "}
+	{&WallTile::getInstance(), "#"},
+	{&EmptyTile::getInstance(), "."},
+	{&ExitTile::getInstance(), "E"},
+	{&PlayerTile::getInstance(), "@"},
+	{&UnknownTile::getInstance(), " "}
 };
 }//jb 
 #endif

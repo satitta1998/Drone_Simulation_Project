@@ -9,7 +9,14 @@ namespace jb
 
 class WallTile : public Tile 
 {
+public:
 	virtual bool canOccupy(const jb::OutputContext& context) const { return false; }
+
+	static WallTile& getInstance()
+	{
+		static WallTile instance;
+		return instance;
+	}
 };
 
 } // jb

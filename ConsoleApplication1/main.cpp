@@ -18,6 +18,8 @@
 #include "OutputContext.h"
 #include "NetworkHandler.h"
 #include "SensorRegistry.h"
+#include "ClientManager.h"
+#include "DynamicWorldView.h"
 
 using namespace jb;
 
@@ -27,25 +29,63 @@ struct InputEvent
     std::string input;
 };
 
-std::queue<InputEvent> g_queue;
-std::mutex g_mutex;
-std::condition_variable g_cv;
+struct EventQueue {
+    std::queue<InputEvent> queue;
+    std::mutex mutex;
+    std::condition_variable cv;
+};
 
-void readerThread(whytsoft::NaiveNetworkHandler& nh, bool& running)
+struct DroneConfig
 {
-    while (running)
-    {
-        size_t socketId = 0;
-        std::string input;
+    Position position;
+    Compass direction;
+    std::vector<Sensor*> sensors;
+    unsigned int energy;
+};
 
-        nh.GetInput(&socketId, &input);
-        if (!input.empty())
+struct ThreadReader
+{
+public:
+    ThreadReader(whytsoft::NaiveNetworkHandler& nh, bool& running, EventQueue& eq)
+        : m_nh(nh),
+        m_running(running),
+        m_eq(eq)
+    {
+    }
+
+    void operator()() const
+    {
+        while (m_running)
         {
-            std::lock_guard<std::mutex> lockOnInputEventQueue(g_mutex);
-            g_queue.push({ socketId, input });
-            g_cv.notify_one();
+            size_t socketId = 0;
+            std::string input;
+
+            m_nh.GetInput(&socketId, &input);
+            if (!input.empty())
+            {
+                std::lock_guard<std::mutex> lockOnInputEventQueue(m_eq.mutex);
+                m_eq.queue.push({ socketId, input });
+                m_eq.cv.notify_one();
+            }
         }
     }
+
+private:
+    whytsoft::NaiveNetworkHandler& m_nh;
+    bool& m_running;
+    EventQueue& m_eq;
+};
+
+WorldGrid setupEnvironment()
+{
+    std::ifstream inputFile("world_grid.txt");
+    if (!inputFile)
+    {
+        throw std::exception{ "Failed to open world grid file." };
+    }
+    WorldGrid theWorld{ inputFile };
+    inputFile.close();
+    return theWorld;
 }
 
 int main()
@@ -54,29 +94,16 @@ int main()
     {
         whytsoft::NaiveNetworkHandler nh{ 9000 };
         bool serverRunning = true;
+        EventQueue eventQueue;
 
-        std::thread reader(readerThread, std::ref(nh), std::ref(serverRunning));
-        
-        std::ifstream inputFile("world_grid.txt");
-        if (!inputFile)
-        {
-            std::cerr << "Failed to open world grid file.\n" << std::endl;
-            return 1;
-        }
-        WorldGrid theWorld{ inputFile };
-        inputFile.close();
+        ThreadReader readerFunctor(nh, serverRunning, eventQueue);
+        std::thread reader(std::ref(readerFunctor));
+
+        WorldGrid theWorld = setupEnvironment();
 
         jb::registerSensor<AreaSensor>("s_a");
         jb::registerSensor<StripSensor>("s_b");
         jb::registerSensor<ConeSensor>("s_c");
-
-        struct DroneConfig
-        {
-            Position position;
-            Compass direction;
-            std::vector<Sensor*> sensors;
-            unsigned int energy;
-        };
 
         using DronesTypes = std::map < std::string, DroneConfig>;
         const DronesTypes drones
@@ -86,23 +113,17 @@ int main()
             {"Octopus", { Position{ 0,0 }, Compass{ NORTH }, std::vector<Sensor*>{jb::getSensorPtr("s_c")}, 400 }}
         };
 
-        struct ClientState
-        {
-            std::unique_ptr<Drone> drone;
-            bool active = true;
-        };
-        using ClientsMap = std::map<size_t, ClientState>;
-        ClientsMap clients;
+        ClientManager clients;
 
         std::cout << "Server started. World loaded." << std::endl;
 
         while (serverRunning)
         {
-            std::unique_lock<std::mutex> lockOnQueue(g_mutex);
-            g_cv.wait(lockOnQueue, [&] {return !g_queue.empty() || !serverRunning; });
+            std::unique_lock<std::mutex> lockOnQueue(eventQueue.mutex);
+            eventQueue.cv.wait(lockOnQueue, [&] {return !eventQueue.queue.empty() || !serverRunning; });
 
-            InputEvent ev = std::move(g_queue.front());
-            g_queue.pop();
+            InputEvent ev = std::move(eventQueue.queue.front());
+            eventQueue.queue.pop();
             lockOnQueue.unlock();
 
             size_t socketId = ev.socketId;
@@ -112,43 +133,46 @@ int main()
 
             if (input == "exit")
             {
-                clients.erase(socketId);
+                clients.removeClient(socketId);
                 std::cout << "Client " << socketId << " disconnected\n";
                 nh.disconnect(socketId);
                 continue;
             }
 
-            auto itr = clients.find(socketId);
-            bool isNewClient = itr == clients.end();
-            if (isNewClient)
+            DynamicWorldView worldView{ theWorld, clients, socketId };
+
+            if (!clients.exists(socketId))
             {
                 if (drones.count(input))
                 {
                     const DroneConfig& cfg = drones.at(input);
-                    ClientState state;
-                    state.drone = DroneFactory::createCustomDrone(theWorld, cfg.position, cfg.direction, cfg.sensors, cfg.energy, context, state.active);
-                    clients[socketId] = std::move(state);
+                    bool initialActive = true;
+                    std::unique_ptr<Drone> newDrone = DroneFactory::createCustomDrone(worldView, theWorld, cfg.position, cfg.direction, cfg.sensors, cfg.energy, context, initialActive);
+                    clients.addClient(socketId, std::move(newDrone));
                     context.output("Drone " + input + " assigned to you (ID: " + std::to_string(socketId) + "). Ready.\n");
                 }
                 else
                 {
-                    context.output("Welcome! Please choose your drone: Leleka, Shark, or Octopus.\n");
+                    context.output("Please choose your drone: Leleka, Shark, or Octopus.\n");
                 }
                 continue;
             }
-            ClientState& client = itr->second;
-            Drone* drone = client.drone.get();
-            if (!client.active)
+
+            if (!clients.isActive(socketId))
             {
-                clients.erase(socketId);
+                clients.removeClient(socketId);
                 continue;
             }
+
+            Drone* drone = clients.getDrone(socketId);
+            bool& activeRef = clients.getActiveRef(socketId);
+
             std::cout << "[Client " << socketId << "]: " << input << std::endl;
-            drone->processCommand(input, context, theWorld, client.active);
+            drone->processCommand(input, context, theWorld, activeRef);
             input.clear();
         }
         serverRunning = false;
-        g_cv.notify_all();
+        eventQueue.cv.notify_all();
         if (reader.joinable())
         {
             reader.join();
@@ -161,91 +185,3 @@ int main()
     std::cout << "Server stopped." << std::endl;
     return 0;
 }
-
-///* WORKING VERSION FOR 1 DRONE */
-//void networkHandlerConnection()
-//{
-//    try
-//    {
-//        whytsoft::NaiveNetworkHandler nh{ 9000 };
-//        size_t socketId = 0;
-//        std::string input;
-//        bool running = true;
-//
-//        std::ifstream inputFile("world_grid.txt");
-//        WorldGrid theWorld{ inputFile };
-//        inputFile.close();
-//
-//        OutputContext context(nh, socketId);
-//
-//        jb::registerSensor<AreaSensor>("s_a");
-//        jb::registerSensor<StripSensor>("s_b");
-//        jb::registerSensor<ConeSensor>("s_c");
-//
-//        struct DronConfig
-//        {
-//            Position position;
-//            Compass direction;
-//            std::vector<Sensor*> sensors;
-//            unsigned int energy;
-//        };
-//
-//        using DronesTypes = std::map < std::string, DronConfig>;
-//        const DronesTypes drones
-//        {
-//            {"Leleka", { Position{ 0,0 }, Compass{ NORTH }, std::vector<Sensor*>{jb::getSensorPtr("s_c")}, 300 } },
-//            {"Shark", { Position{ 0,0 }, Compass{ NORTH }, std::vector<Sensor*>{jb::getSensorPtr("s_a"),jb::getSensorPtr("s_b")}, 500 } },
-//            {"Octopus", { Position{ 0,0 }, Compass{ NORTH }, std::vector<Sensor*>{jb::getSensorPtr("s_c")}, 400 }}
-//        };
-//        
-//        std::unique_ptr<Drone> drone = nullptr;
-//        
-//        while (drone == nullptr)
-//        {
-//            nh.GetInput(&socketId, &input);
-//            if (input.empty())
-//            {
-//                continue;
-//            }
-//            if (drones.count(input))
-//            {
-//                const DronConfig& cfg = drones.at(input);
-//                drone = DroneFactory::createCustomDrone(theWorld, cfg.position, cfg.direction, cfg.sensors, cfg.energy, context, running);
-//                context.output("Drone " + input + " initialized and ready.\n");
-//            }
-//            else
-//            {
-//                context.output("Unknown drone type! Please choose: Leleka, Shark, or Octopus.\n");
-//            }
-//            input.clear();
-//        }
-//        while (running)
-//        {
-//            nh.GetInput(&socketId, &input);
-//            if (input.empty())
-//            {
-//                continue;
-//            }
-//            std::cout << "[Client " << socketId << "]: " << input << std::endl;
-//            if (!running)
-//            {
-//                continue;
-//            }
-//            drone->processCommand(input, context, theWorld, running);
-//            input.clear();
-//        }
-//
-//    }
-//    catch (const std::exception& e)
-//    {
-//        std::cerr << "Runtime error: " << e.what() << std::endl;
-//    }
-//    std::cout << "Server stopped." << std::endl;
-//}
-//
-//
-//int main()
-//{
-//	networkHandlerConnection();
-//	return 0;
-//}

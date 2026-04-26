@@ -1,5 +1,7 @@
 #include "WorldGrid.h"
 #include "CharactersMap.h"
+#include "WallTile.h"
+#include "ExitTile.h"
 #include "Tile.h"
 #include <iostream>
 #include <string>
@@ -7,8 +9,6 @@
 
 namespace jb
 {
-WorldGrid* GLOBAL_GRID = nullptr;
-using CharMap = std::map<char, Tile*>;
 Tile& parseCharacters(const CharactersMap& characters, const char& ch);
 
 struct ChUnknown : public Tile
@@ -16,22 +16,17 @@ struct ChUnknown : public Tile
 	virtual bool canOccupy(const jb::OutputContext& context) const override { context.output("ERROR: Unknown character\n"); return false; }
 } CH_UNKNOWN;
 
-EmptyTile EMPTY{};
-WallTile WALL{};
-ExitTile EXIT{};
-PlayerTile PLAYER{};
-
 WorldGrid::WorldGrid() 
 	: m_grid{}
 { 
-	                                             // =======  
-	m_grid[0][0] = &WALL;                        // = #   =
-	m_grid[1][1] = &WALL;                        // = #   =
-	m_grid[2][2] = &WALL;                        // =  #  =   |
-	m_grid[3][3] = &WALL;                        // =   # =   |
-	m_grid[4][0] = &WALL; m_grid[4][3] = &WALL;  // =#   #=  \|/
-	m_grid[5][1] = &WALL; m_grid[5][4] = &EXIT;  // = #  E=   N
-	                                             // =======
+	//                                             // =======  
+	//m_grid[0][0] = &WALL;                        // = #   =
+	//m_grid[1][1] = &WALL;                        // = #   =
+	//m_grid[2][2] = &WALL;                        // =  #  =   |
+	//m_grid[3][3] = &WALL;                        // =   # =   |
+	//m_grid[4][0] = &WALL; m_grid[4][3] = &WALL;  // =#   #=  \|/
+	//m_grid[5][1] = &WALL; m_grid[5][4] = &EXIT;  // = #  E=   N
+	//                                             // =======
 }
 
 WorldGrid::WorldGrid(std::ifstream& inputFile)
@@ -62,15 +57,15 @@ Tile &WorldGrid::getTile(int x, int y) const
 {
 	if (x < 0 || y < 0)
 	{
-		return WALL;
+		return WallTile::getInstance();
 	}
 	if (x >= getRowSize() || y >= getNumRows())
 	{
-		return WALL;
+		return WallTile::getInstance();
 	}
 
 	Tile *tile = m_grid[y][x];
-	return tile ? *tile : EMPTY;
+	return tile ? *tile : EmptyTile::getInstance();
 }
 
 void WorldGrid::setTile(int x, int y, Tile& newTile)

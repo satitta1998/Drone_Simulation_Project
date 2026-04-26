@@ -13,14 +13,7 @@
 
 namespace jb
 {
-//class WorldGrid;
-//extern WorldGrid* GLOBAL_GRID;
 class Tile;
-
-extern EmptyTile EMPTY;
-extern WallTile WALL;
-extern ExitTile EXIT;
-extern PlayerTile PLAYER;
 
 class WorldGrid {
 

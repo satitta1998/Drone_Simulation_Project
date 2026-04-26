@@ -26,15 +26,8 @@ namespace jb
 
         for (int i = 0; i <= steps; ++i)
         {
-            if (current.getX() == m_position.getX() && current.getY() == m_position.getY())
-            {
-                context.output(characters.at(&PLAYER));
-            }
-            else
-            {
-                Tile& tile = m_grid.getTile(current.getX(), current.getY());
-                context.output(characters.at(&tile));
-            }
+            Tile& tile = m_grid.getTileViewAt(current);
+            context.output(characters.at(&tile));
             current = Position{ current.getX() + dx, current.getY() + dy };
         }
 	}

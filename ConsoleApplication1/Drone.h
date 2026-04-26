@@ -25,7 +25,6 @@ public:
 	explicit Drone(Position position,Compass compass, std::vector<Sensor*>sensors, unsigned int energy, CommandsMap commands, Sensor* activeSensor);
 
 	void processCommand(const std::string& inputCmd, const jb::OutputContext& context, const WorldGrid& theWorld, bool& running);
-	
 
 	void setPosition(Position& position) { m_position = position; }
 	void setCompass(Compass& compass) { m_compass = compass; }

@@ -2,7 +2,7 @@
 #define _ConeSensor_h_
 
 #include "Sensor.h"
-#include "WorldGrid.h"
+#include "IWorldView.h"
 #include "Position.h"
 #include "Compass.h"
 #include "OutputContext.h"
@@ -13,7 +13,7 @@ namespace jb
 	{
 	public:
 		ConeSensor() = default;
-		virtual void scan(const WorldGrid& grid, const Position& position, const Compass& compass, const jb::OutputContext& context) const override;
+		virtual void scan(const IWorldView& grid, const Position& position, const Compass& compass, const jb::OutputContext& context) const override;
 	};
 
 }//jb
