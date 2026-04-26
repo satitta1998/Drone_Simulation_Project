@@ -11,7 +11,13 @@ def start_client():
         print(f"Connection to {HOST}:{PORT}...")
         client_socket.connect((HOST, PORT))
         print("Connected!")
-        print("Enter 'exit' to exit the programm")
+        
+        client_socket.sendall(b"a\n")
+        data = client_socket.recv(1024)
+        if data:
+            print(data.decode('utf-8').strip())
+        print("Enter 'exit' to quit.")
+        
 
         while True:
             message = input("You: ")
